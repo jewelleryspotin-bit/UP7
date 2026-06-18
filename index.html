@@ -145,9 +145,18 @@
             background-color: #e2fffe !important;
             color: #002020 !important;
         }
+        .theme-midnight-bg {
+            background-color: #06141a !important;
+            color: #ccf2ff !important;
+        }
         .theme-ad-bg {
             background-color: #FAF9F6 !important;
             color: #002020 !important;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
         }
         
         /* Custom switches and states */
@@ -702,7 +711,7 @@
 
         // SCREENS GENERATOR
         function renderHome() {
-            const bgClass = currentTheme === 'ethereal' ? 'theme-ethereal-bg' : 'theme-ad-bg';
+            const bgClass = currentTheme === 'ethereal' ? 'theme-ethereal-bg' : (currentTheme === 'midnight' ? 'theme-midnight-bg' : 'theme-ad-bg');
             
             // Timer button class logic
             const activeBtn = "py-3 px-1.5 rounded-xl border border-primary bg-primary/5 text-primary font-bold text-xs transition-all active:scale-95";
@@ -789,13 +798,13 @@
                             </div>
                             <span class="text-[9px] font-bold text-on-surface-variant/60 uppercase tracking-wider">Alarm</span>
                         </button>
-                        <button onclick="openStoreAlert('native')" class="flex flex-col items-center gap-1.5 group select-none">
+                        <button onclick="openSoundsSheet()" class="flex flex-col items-center gap-1.5 group select-none">
                             <div class="w-12 h-12 flex items-center justify-center bg-surface-container-lowest rounded-xl border border-white/50 active:scale-90 transition-all shadow-sm">
                                 <span class="material-symbols-outlined text-primary text-xl">auto_awesome</span>
                             </div>
                             <span class="text-[9px] font-bold text-on-surface-variant/60 uppercase tracking-wider">Sounds</span>
                         </button>
-                        <button onclick="openStoreAlert('native')" class="flex flex-col items-center gap-1.5 group select-none">
+                        <button onclick="openThemeSheet()" class="flex flex-col items-center gap-1.5 group select-none">
                             <div class="w-12 h-12 flex items-center justify-center bg-surface-container-lowest rounded-xl border border-white/50 active:scale-90 transition-all shadow-sm">
                                 <span class="material-symbols-outlined text-primary text-xl">display_settings</span>
                             </div>
@@ -826,7 +835,7 @@
         }
 
         function renderReminders() {
-            const bgClass = currentTheme === 'ethereal' ? 'theme-ethereal-bg' : 'theme-ad-bg';
+            const bgClass = currentTheme === 'ethereal' ? 'theme-ethereal-bg' : (currentTheme === 'midnight' ? 'theme-midnight-bg' : 'theme-ad-bg');
 
             let itemsList = '';
             alarms.forEach(al => {
@@ -907,7 +916,7 @@
         }
 
         function renderAddReminder() {
-            const bgClass = currentTheme === 'ethereal' ? 'theme-ethereal-bg' : 'theme-ad-bg';
+            const bgClass = currentTheme === 'ethereal' ? 'theme-ethereal-bg' : (currentTheme === 'midnight' ? 'theme-midnight-bg' : 'theme-ad-bg');
             const activeCatBtn = "category-btn px-4 py-2 rounded-full bg-primary text-white font-bold text-xs shadow-md shadow-primary/20 transition-all select-none";
             const inactiveCatBtn = "category-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant font-bold text-xs ring-1 ring-on-surface/5 transition-all hover:bg-secondary-container/20 select-none";
 
@@ -1011,6 +1020,155 @@
         }
 
         // GLOBAL APP VIEW MOUNTER
+        // OVERLAY SHEETS VARIABLES & HANDLERS
+        let isSoundsSheetOpen = false;
+        let isThemeSheetOpen = false;
+        let playingSound = 'Rain'; // 'Rain', 'Hum', 'Ocean', 'Forest'
+        let isSoundPlaying = true;
+
+        function openSoundsSheet() {
+            isSoundsSheetOpen = true;
+            renderApp();
+        }
+        function closeSoundsSheet() {
+            isSoundsSheetOpen = false;
+            renderApp();
+        }
+        function openThemeSheet() {
+            isThemeSheetOpen = true;
+            renderApp();
+        }
+        function closeThemeSheet() {
+            isThemeSheetOpen = false;
+            renderApp();
+        }
+        function selectSound(soundId) {
+            playingSound = soundId;
+            isSoundPlaying = true;
+            renderApp();
+        }
+        function togglePlayPause() {
+            isSoundPlaying = !isSoundPlaying;
+            renderApp();
+        }
+        function applyAppTheme(themeId) {
+            currentTheme = themeId;
+            isThemeSheetOpen = false;
+            // Also sync the desktop landing header buttons if present
+            const etherealBtn = document.getElementById('toggle-opt-ethereal');
+            const adBtn = document.getElementById('toggle-opt-ad');
+            if (etherealBtn && adBtn) {
+                if (themeId === 'ethereal') {
+                    etherealBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-primary text-white border border-primary transition-all";
+                    adBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-white text-teal-900 border border-teal-900/10 transition-all hover:bg-teal-50";
+                } else if (themeId === 'ad') {
+                    etherealBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-white text-teal-900 border border-teal-900/10 transition-all hover:bg-teal-50";
+                    adBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-primary text-white border border-primary transition-all";
+                } else {
+                    etherealBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-white text-teal-900 border border-teal-900/10 transition-all hover:bg-teal-50";
+                    adBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-white text-teal-900 border border-teal-900/10 transition-all hover:bg-teal-50";
+                }
+            }
+            renderApp();
+        }
+
+        function renderOverlaySheets() {
+            let html = '';
+            
+            if (isSoundsSheetOpen) {
+                const soundsList = [
+                    { id: 'Rain', name: 'Lavender Rainfall', icon: '🌧️' },
+                    { id: 'Hum', name: 'Ethereal Cosmic Hum', icon: '🌌' },
+                    { id: 'Ocean', name: 'Deep Ocean Whispers', icon: '🌊' },
+                    { id: 'Forest', name: 'Forest Twilight Breeze', icon: '🌲' }
+                ];
+                
+                let listItems = '';
+                soundsList.forEach(snd => {
+                    const isActive = playingSound === snd.id;
+                    listItems += `
+                        <div onclick="selectSound('${snd.id}')" class="flex items-center justify-between p-3.5 rounded-2xl cursor-pointer transition-all ${isActive ? 'bg-primary/10 border border-primary/20 text-primary' : 'bg-slate-50 hover:bg-slate-100 text-slate-800'} border border-transparent">
+                            <div class="flex items-center gap-3">
+                                <span class="text-lg">${snd.icon}</span>
+                                <span class="font-bold text-xs">${snd.name}</span>
+                            </div>
+                            ${isActive && isSoundPlaying ? `
+                                <div class="flex items-center gap-0.5 h-3">
+                                    <span class="w-0.5 bg-primary rounded-full animate-pulse h-2"></span>
+                                    <span class="w-0.5 bg-primary rounded-full animate-pulse h-3"></span>
+                                    <span class="w-0.5 bg-primary rounded-full animate-pulse h-1.5"></span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm z-40 flex items-end">
+                        <div class="w-full bg-white rounded-t-[32px] p-5 pb-8 shadow-2xl relative z-50 text-left space-y-4 animate-[slideUp_0.2s_ease-out]">
+                            <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                                <h4 class="font-extrabold text-teal-950 text-sm">Ambient Soundscapes</h4>
+                                <button onclick="closeSoundsSheet()" class="w-7 h-7 bg-slate-100 hover:bg-slate-200 transition-colors rounded-full flex items-center justify-center text-slate-800">
+                                    <span class="material-symbols-outlined text-[15px]">close</span>
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                ${listItems}
+                            </div>
+                            
+                            <button onclick="togglePlayPause()" class="w-full py-3 bg-primary hover:bg-primary/95 text-white font-bold text-xs rounded-xl shadow transition-all active:scale-95 flex items-center justify-center gap-1.5">
+                                <span class="material-symbols-outlined text-[16px]">${isSoundPlaying ? 'pause_circle' : 'play_circle'}</span>
+                                ${isSoundPlaying ? 'Pause Ambient Loop' : 'Play Ambient Loop'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (isThemeSheetOpen) {
+                const themesList = [
+                    { id: 'ethereal', name: 'Ethereal Rest (Light)', icon: 'light_mode', desc: 'Soft luminous dawn, calming off-whites' },
+                    { id: 'midnight', name: 'Midnight Velvet (Dark)', icon: 'dark_mode', desc: 'Cosmic obsidian focus, sleep-friendly contrast' },
+                    { id: 'ad', name: 'Ad-Integrated Rest', icon: 'ads_click', desc: 'Ethereal rest with supported sponsored ads' }
+                ];
+                
+                let listItems = '';
+                themesList.forEach(t => {
+                    const isActive = currentTheme === t.id;
+                    listItems += `
+                        <div onclick="applyAppTheme('${t.id}')" class="flex items-start gap-3.5 p-3.5 rounded-2xl cursor-pointer transition-all ${isActive ? 'bg-primary/10 border border-primary/20 text-primary' : 'bg-slate-50 hover:bg-slate-100 text-slate-800'} border border-transparent">
+                            <span class="material-symbols-outlined text-lg mt-0.5">${t.icon}</span>
+                            <div class="text-left flex-1">
+                                <p class="font-bold text-xs leading-tight">${t.name}</p>
+                                <p class="text-[10px] opacity-70 mt-0.5">${t.desc}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm z-40 flex items-end">
+                        <div class="w-full bg-white rounded-t-[32px] p-5 pb-8 shadow-2xl relative z-50 text-left space-y-4 animate-[slideUp_0.2s_ease-out]">
+                            <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                                <h4 class="font-extrabold text-teal-950 text-sm">Theme Selector</h4>
+                                <button onclick="closeThemeSheet()" class="w-7 h-7 bg-slate-100 hover:bg-slate-200 transition-colors rounded-full flex items-center justify-center text-slate-800">
+                                    <span class="material-symbols-outlined text-[15px]">close</span>
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                ${listItems}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
+        // GLOBAL APP VIEW MOUNTER
         function renderApp() {
             let appContent = '';
             
@@ -1018,6 +1176,9 @@
             else if (currentScreen === 'reminders') appContent = renderReminders();
             else if (currentScreen === 'add-reminder') appContent = renderAddReminder();
             else if (currentScreen === 'sleep-active') appContent = renderSleepActive();
+
+            // Inject dynamic sheet overlays if open
+            appContent += renderOverlaySheets();
 
             // Mount on desktop simulator
             const dtViewport = document.getElementById('app-viewport');
