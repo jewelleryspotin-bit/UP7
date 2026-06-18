@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
     <title>UP7 - Ethereal Sleep Companion</title>
     
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+    <meta name="apple-mobile-web-app-title" content="UP7"/>
+    <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/aida/AP1WRLuhefTtpa_1PAXpXy2U8KNjADyhKLPRd2a7odIM0lrZUDtZsTl1Mh4kqHqjFHP7uQPOQeOLzsP9V9qOdCAX34O-DukIw7nEeZvuAWz0-q-X5ErERrzmEgGCJnVKanb9a9L6xTK-5sTNJ7hikb94r7Ki-cx54rKFmLqD-SGcqskcoY-wGrgdYx--k1CbtAvB9OOVUwqXYVjz2MjY4G17_G2DCp3qpWJ21yaaeoDFKS5IDYDq1QTurGTR9BLl"/>
+    <link rel="manifest" href="manifest.json"/>
+    
     <!-- Tailwind CSS with Forms and Container Queries -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     
@@ -333,32 +340,13 @@
             </button>
             
             <div class="text-center flex flex-col items-center gap-4 mt-2">
-                <div class="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/20">
-                    <span class="material-symbols-outlined text-white text-[32px]">waves</span>
-                </div>
-                <div>
-                    <h4 class="font-extrabold text-teal-950 text-xl" id="store-modal-title">Install UP7 Companion</h4>
-                    <p class="text-teal-900/60 text-sm mt-1 leading-relaxed">Direct installation download triggered for your device.</p>
+                <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/20">
+                    <span class="material-symbols-outlined text-white text-[28px]">waves</span>
                 </div>
                 
-                <!-- Graphic Simulator for downloading -->
-                <div class="w-full bg-emerald-50 rounded-2xl p-4 border border-emerald-500/10 flex flex-col gap-3 items-center">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-emerald-600 animate-bounce">downloading</span>
-                        <span class="font-bold text-xs text-emerald-800" id="store-modal-status">Preparing direct installer...</span>
-                    </div>
-                    <div class="w-full bg-emerald-100 rounded-full h-2 overflow-hidden">
-                        <div class="bg-emerald-600 h-full w-[85%] rounded-full animate-[progress_3s_ease-out]"></div>
-                    </div>
-                </div>
-
-                <!-- Text message fallback -->
-                <div class="w-full border-t border-teal-950/5 pt-4">
-                    <label class="block text-xs font-bold text-teal-900/60 text-left mb-1.5 uppercase tracking-wide">Or text yourself the link</label>
-                    <div class="flex gap-2">
-                        <input id="link-sms-input" type="tel" placeholder="+1 (555) 000-0000" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary"/>
-                        <button onclick="sendLinkMock()" class="bg-primary hover:bg-primary/95 text-white font-bold text-xs px-4 rounded-xl shadow transition-all active:scale-95">Send</button>
-                    </div>
+                <!-- Dynamic platform content container -->
+                <div id="modal-platform-content" class="w-full text-center">
+                    <!-- Dynamic details injected by script -->
                 </div>
             </div>
         </div>
@@ -391,18 +379,57 @@
 
         // Install Direct Mock Dialog
         function openStoreAlert(platform) {
-            const title = document.getElementById('store-modal-title');
-            const status = document.getElementById('store-modal-status');
+            const container = document.getElementById('modal-platform-content');
             
-            if (platform === 'iOS') {
-                title.innerText = "Download for iOS Device";
-                status.innerText = "Redirecting to App Store...";
-            } else if (platform === 'Android') {
-                title.innerText = "Download for Android Device";
-                status.innerText = "Redirecting to Google Play Store...";
+            // Auto detect if platform is generic
+            let activePlatform = platform;
+            if (platform === 'native') {
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                    activePlatform = 'iOS';
+                } else {
+                    activePlatform = 'Android';
+                }
+            }
+            
+            if (activePlatform === 'iOS') {
+                container.innerHTML = `
+                    <h4 class="font-extrabold text-teal-950 text-lg">Safari Install Trick (iOS)</h4>
+                    <p class="text-teal-900/60 text-xs mt-1 leading-relaxed">Add UP7 to your Home Screen to install it as a standalone app without using the App Store:</p>
+                    
+                    <div class="w-full text-left space-y-3 mt-4 bg-teal-50/50 p-4 rounded-2xl border border-primary/5">
+                        <div class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                            <p class="text-xs text-teal-950 font-medium">Open this page in the <strong class="text-primary font-bold">Safari</strong> browser.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                            <p class="text-xs text-teal-950 font-medium flex items-center flex-wrap gap-1">
+                                Tap the <strong class="text-primary font-bold flex items-center gap-0.5">Share <span class="material-symbols-outlined text-[15px] align-middle">ios_share</span></strong> button in Safari's bottom toolbar.
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                            <p class="text-xs text-teal-950 font-medium">Scroll down the sharing menu and select <strong class="text-primary font-bold">"Add to Home Screen"</strong>.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">4</span>
+                            <p class="text-xs text-teal-950 font-medium">Tap <strong class="text-primary font-bold">"Add"</strong> in the top-right corner to finish!</p>
+                        </div>
+                    </div>
+                `;
             } else {
-                title.innerText = "Install UP7 App";
-                status.innerText = "Detecting device and downloading...";
+                container.innerHTML = `
+                    <h4 class="font-extrabold text-teal-950 text-lg">Direct Android Install</h4>
+                    <p class="text-teal-900/60 text-xs mt-1 leading-relaxed">Since the app is not in the Google Play Store yet, download the APK file directly to install:</p>
+                    
+                    <a href="UP7-v3.5.apk" download class="w-full mt-4.5 py-3.5 bg-primary hover:bg-primary/95 text-white font-bold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                        <span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+                        Download UP7-v3.5.apk
+                    </a>
+                    
+                    <p class="text-[10px] text-teal-900/40 mt-3 leading-snug">Note: If prompted, allow installation of applications from unknown sources in settings.</p>
+                `;
             }
             
             document.getElementById('store-modal').classList.remove('hidden');
