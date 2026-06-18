@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Up7 - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .premium-glow {
+            box-shadow: 0 10px 30px rgba(12, 103, 128, 0.04);
+        }
+        body {
+            background-color: #e2fffe;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            color: #002020;
+            position: relative;
+        }
+        /* Animated Background Elements matching the theme */
+        .bg-element {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: drift 25s infinite alternate ease-in-out;
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(3%, 5%) scale(1.05); }
+            100% { transform: translate(-3%, 3%) scale(0.95); }
+        }
+        .bg-element-1 { width: 500px; height: 500px; background: #ffffff; top: -150px; left: -150px; }
+        .bg-element-2 { width: 400px; height: 400px; background: #d7fafa; bottom: -100px; right: -100px; animation-delay: -5s; }
+
+        .tight-tracking {
+            letter-spacing: -0.025em;
+        }
+        .breathable-body {
+            line-height: 1.625;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#0c6780",
+                        "primary-container": "#87ceeb",
+                        "surface": "#e2fffe",
+                        "surface-container-low": "#d7fafa",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#002020",
+                        "on-surface-variant": "#3f484c",
+                        "outline-variant": "#bfc8cd",
+                        "secondary-container": "#baeafa",
+                        "on-secondary-container": "#3c6b78"
+                    },
+                    "borderRadius": {
+                        "card": "24px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "24px",
+                        "base": "8px",
+                        "lg": "32px",
+                        "xl": "48px",
+                        "sm": "12px",
+                        "md": "20px",
+                        "xs": "4px"
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="antialiased pb-48">
+<!-- Background elements for ethereal feel -->
+<div class="bg-element bg-element-1"></div>
+<div class="bg-element bg-element-2"></div>
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl flex justify-between items-center px-margin-mobile py-4 border-b border-primary/5">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 flex items-center justify-center">
+<img alt="Up7 Logo" class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/AP1WRLuhefTtpa_1PAXpXy2U8KNjADyhKLPRd2a7odIM0lrZUDtZsTl1Mh4kqHqjFHP7uQPOQeOLzsP9V9qOdCAX34O-DukIw7nEeZvuAWz0-q-X5ErERrzmEgGCJnVKanb9a9L6xTK-5sTNJ7hikb94r7Ki-cx54rKFmLqD-SGcqskcoY-wGrgdYx--k1CbtAvB9OOVUwqXYVjz2MjY4G17_G2DCp3qpWJ21yaaeoDFKS5IDYDq1QTurGTR9BLl"/>
+</div>
+<h1 class="font-bold text-xl tracking-tight text-primary">Up7</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[13px] font-bold tracking-tight text-on-surface/60" id="current-time">10:45 PM</span>
+<button class="w-9 h-9 rounded-full bg-white/80 flex items-center justify-center shadow-sm border border-primary/5 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px] text-primary" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<main class="mt-24 px-margin-mobile flex flex-col gap-6 max-w-lg mx-auto">
+<!-- Hero Greeting -->
+<section class="flex flex-col items-center text-center py-4">
+<div class="w-48 h-48 mb-4 relative">
+<img alt="Cloud Illustration" class="w-full h-full object-contain relative z-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsBctmavGsfl6sp2IKtefEOq1aWHI33bnlDl-2ey_0clsqXu13jni-Waw3RC5YrKOgt5ojWILLl7cQ18l_RcRsxN51kK2vQEgy6Ek8k02u70xQ2MBPJnq4_PVfwcou4ycFYA-vjxs0ShTdPKTnPncbJ9IoH5It1YHVGlVB-eQkFKALIXo2SQR9jDfbMQc7MYSY3KR5xQ6KW8TYgR-xoFhUM6_WKogTmrIQUGdmhxExyf88NZ7xacaldVBvSbrS3gopilqE408-K1ES"/>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white/40 blur-[40px] -z-10 rounded-full"></div>
+</div>
+<h2 class="text-3xl font-bold tight-tracking text-on-surface">Good Night 🌙</h2>
+<p class="text-on-surface-variant/70 mt-2 text-[15px] font-medium">Ready for a peaceful rest?</p>
+</section>
+<!-- Premium Feature Banner -->
+<section class="relative overflow-hidden rounded-card bg-primary group active:scale-[0.98] transition-transform shadow-lg shadow-primary/10">
+<div class="absolute inset-0 bg-gradient-to-br from-primary via-[#165a6d] to-primary"></div>
+<div class="relative z-10 p-6 flex items-center justify-between">
+<div class="max-w-[65%]">
+<span class="inline-block px-2 py-0.5 rounded bg-white/20 text-white text-[9px] font-bold uppercase tracking-widest mb-2">Premium</span>
+<h3 class="text-lg font-bold text-white leading-tight tight-tracking">Unlock Premium Ambient Sounds</h3>
+<p class="text-white/80 text-[12px] mt-1.5 font-medium leading-relaxed">Deepen your REM cycle with curated audio landscapes.</p>
+</div>
+<div class="w-14 h-14 bg-white/10 rounded-2xl backdrop-blur-md flex items-center justify-center border border-white/20">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+</div>
+</section>
+<!-- Section 1 - Sleep Timer -->
+<section class="bg-surface-container-lowest rounded-card p-6 premium-glow border border-white/50">
+<div class="flex items-center justify-between mb-5">
+<h3 class="text-lg font-bold tight-tracking text-on-surface">Sleep Timer</h3>
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="timer">timer</span>
+</div>
+<div class="grid grid-cols-2 gap-3 mb-6">
+<button class="timer-btn py-3.5 px-4 rounded-xl border border-primary bg-primary/5 text-primary font-bold text-sm transition-all active:scale-95">30 Min</button>
+<button class="timer-btn py-3.5 px-4 rounded-xl border border-primary/5 bg-surface-container-low text-on-surface-variant font-bold text-sm transition-all active:scale-95">1 Hour</button>
+<button class="timer-btn py-3.5 px-4 rounded-xl border border-primary/5 bg-surface-container-low text-on-surface-variant font-bold text-sm transition-all active:scale-95">2 Hours</button>
+<button class="timer-btn py-3.5 px-4 rounded-xl border border-primary/5 bg-surface-container-low text-on-surface-variant font-bold text-sm transition-all active:scale-95">Custom</button>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-primary/5">
+<span class="text-[14px] font-semibold text-on-surface">Fade-out music</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-primary/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[20px] after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:rounded-full after:h-[18px] after:w-[18px] after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</section>
+<!-- Quick Actions Grid -->
+<section class="grid grid-cols-4 gap-4">
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-14 h-14 flex items-center justify-center bg-surface-container-lowest rounded-2xl premium-glow border border-white/50 active:scale-90 transition-transform group-hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="add_task">add_task</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Tasks</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-14 h-14 flex items-center justify-center bg-surface-container-lowest rounded-2xl premium-glow border border-white/50 active:scale-90 transition-transform group-hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="alarm">alarm</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Alarm</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-14 h-14 flex items-center justify-center bg-surface-container-lowest rounded-2xl premium-glow border border-white/50 active:scale-90 transition-transform group-hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Sounds</span>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-14 h-14 flex items-center justify-center bg-surface-container-lowest rounded-2xl premium-glow border border-white/50 active:scale-90 transition-transform group-hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="display_settings">display_settings</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Theme</span>
+</button>
+</section>
+<!-- Section 2 - Tomorrow's Reminders -->
+<section class="bg-surface-container-lowest rounded-card p-6 premium-glow border border-white/50">
+<h3 class="text-lg font-bold tight-tracking text-on-surface mb-5">Tomorrow’s Schedule</h3>
+<div class="space-y-3">
+<div class="flex items-center gap-4 p-4 bg-surface-container-low/50 rounded-2xl border border-primary/5">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-lg shadow-sm">🎂</div>
+<div class="flex-1">
+<p class="font-bold text-[14px] text-on-surface">Mom’s Birthday</p>
+<p class="text-[12px] font-medium text-on-surface-variant/60">All day event</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-low/50 rounded-2xl border border-primary/5">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-lg shadow-sm">📚</div>
+<div class="flex-1">
+<p class="font-bold text-[14px] text-on-surface">Economics Exam</p>
+<p class="text-[12px] font-medium text-on-surface-variant/60">Starting at 10:00 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-low/50 rounded-2xl border border-primary/5">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-lg shadow-sm">💳</div>
+<div class="flex-1">
+<p class="font-bold text-[14px] text-on-surface">Electricity Bill</p>
+<p class="text-[12px] font-medium text-on-surface-variant/60">Due by 5:00 PM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-low/50 rounded-2xl border border-primary/5">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-lg shadow-sm">✈️</div>
+<div class="flex-1">
+<p class="font-bold text-[14px] text-on-surface">Trip to Delhi</p>
+<p class="text-[12px] font-medium text-on-surface-variant/60">Gate closes at 8:30 PM</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3 - Ad Slot (Integrated Banner) -->
+<section class="bg-surface-container-lowest rounded-card p-6 premium-glow relative overflow-hidden group border border-white/50">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:scale-110 transition-transform"></div>
+<div class="flex flex-col gap-4 relative z-10">
+<div class="flex justify-between items-start">
+<span class="bg-primary/10 text-primary text-[9px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 rounded">Sponsored</span>
+<span class="material-symbols-outlined text-primary/30 text-sm" data-icon="info">info</span>
+</div>
+<div class="flex gap-4">
+<div class="w-14 h-14 rounded-2xl bg-surface-container-low border border-primary/5 flex items-center justify-center shrink-0 shadow-sm">
+<span class="text-2xl">🌿</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-[16px] tight-tracking text-on-surface">Pure Lavender Sleep Oils</h4>
+<p class="text-[12px] text-on-surface-variant/80 mt-1 leading-snug">Certified organic essential oils designed to extend deep REM sleep cycles.</p>
+</div>
+</div>
+<button class="mt-1 w-full py-3 rounded-xl border border-primary/20 text-primary font-bold text-[13px] flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors active:scale-95">
+                    Shop Collection <span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Bottom Action Button -->
+<button class="w-full py-5 bg-primary text-white font-bold text-[17px] rounded-card shadow-xl shadow-primary/20 transition-all active:scale-95 border-t border-white/20 tight-tracking mt-2">
+            Start Sleep Mode
+        </button>
+<!-- AdMob Banner Placeholder -->
+<div class="w-full flex justify-center py-2">
+<div class="w-[320px] h-[50px] bg-primary/5 rounded-lg border border-primary/10 flex flex-col items-center justify-center overflow-hidden">
+<span class="text-[9px] font-bold text-primary/30 uppercase tracking-widest mb-0.5">Advertisement</span>
+<div class="flex items-center gap-2 opacity-10">
+<div class="w-5 h-5 bg-primary rounded-sm"></div>
+<div class="h-1.5 w-20 bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-sm flex justify-around items-center p-2.5 bg-white/70 backdrop-blur-2xl z-50 rounded-full border border-white/50 shadow-[0_15px_40px_rgba(12,103,128,0.12)]">
+<!-- Home Active -->
+<a class="flex items-center gap-2 bg-primary text-white rounded-full px-5 py-2.5 transition-all" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="home_app_logo" style="font-variation-settings: 'FILL' 1;">home_app_logo</span>
+<span class="font-bold text-[13px] tracking-tight">Home</span>
+</a>
+<a class="flex items-center justify-center w-11 h-11 text-primary/40 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="notifications_active">notifications_active</span>
+</a>
+<a class="flex items-center justify-center w-11 h-11 text-primary/40 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="bedtime">bedtime</span>
+</a>
+<a class="flex items-center justify-center w-11 h-11 text-primary/40 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="person">person</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('current-time').innerText = timeString;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Timer selection toggle
+        const timerBtns = document.querySelectorAll('.timer-btn');
+        timerBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                timerBtns.forEach(b => {
+                    b.classList.remove('bg-primary/5', 'border-primary', 'text-primary');
+                    b.classList.add('border-primary/5', 'bg-surface-container-low', 'text-on-surface-variant');
+                });
+                btn.classList.remove('border-primary/5', 'bg-surface-container-low', 'text-on-surface-variant');
+                btn.classList.add('bg-primary/5', 'border-primary', 'text-primary');
+            });
+        });
+    </script>
+</body></html>
