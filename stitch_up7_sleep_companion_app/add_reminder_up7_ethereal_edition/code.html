@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Up7 - New Reminder</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#005870",
+                    "tertiary-container": "#c5c4c1",
+                    "on-tertiary-fixed-variant": "#464745",
+                    "on-primary-fixed-variant": "#004d62",
+                    "surface": "#e2fffe",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#c6e9e9",
+                    "outline-variant": "#bfc8cd",
+                    "surface-container-low": "#d7fafa",
+                    "primary": "#0c6780",
+                    "primary-container": "#87ceeb",
+                    "inverse-surface": "#143535",
+                    "on-primary-fixed": "#001f29",
+                    "on-surface": "#002020",
+                    "tertiary-fixed": "#e3e2e0",
+                    "surface-container": "#d2f5f4",
+                    "on-tertiary-container": "#50514f",
+                    "background": "#e2fffe",
+                    "primary-fixed-dim": "#89d0ed",
+                    "on-tertiary-fixed": "#1a1c1a",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#001f27",
+                    "secondary": "#366572",
+                    "on-secondary-container": "#3c6b78",
+                    "surface-dim": "#bee1e0",
+                    "on-secondary-fixed-variant": "#1b4d5a",
+                    "surface-bright": "#e2fffe",
+                    "tertiary-fixed-dim": "#c7c6c4",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#baeafa",
+                    "inverse-on-surface": "#d4f8f7",
+                    "secondary-fixed-dim": "#9fcedd",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#0c6780",
+                    "on-secondary": "#ffffff",
+                    "tertiary": "#5e5f5d",
+                    "surface-container-high": "#ccefee",
+                    "outline": "#6f787d",
+                    "on-background": "#002020",
+                    "inverse-primary": "#89d0ed",
+                    "secondary-fixed": "#baeafa",
+                    "surface-variant": "#c6e9e9",
+                    "primary-fixed": "#baeaff",
+                    "on-surface-variant": "#3f484c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "xl": "48px",
+                    "md": "20px",
+                    "gutter-mobile": "16px",
+                    "base": "8px",
+                    "sm": "12px",
+                    "margin-mobile": "24px",
+                    "lg": "32px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "title-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "display": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #e2fffe; /* surface-bright */
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 12px 32px rgba(135, 206, 235, 0.15);
+      }
+      .custom-shadow {
+        box-shadow: 0 12px 32px rgba(135, 206, 235, 0.15);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      /* Custom toggle styling */
+      .toggle-checkbox:checked {
+        right: 0;
+        background-color: #0c6780;
+      }
+      .toggle-checkbox:checked + .toggle-label {
+        background-color: #87ceeb;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-on-surface">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-3xl shadow-[0_12px_32px_rgba(135,206,235,0.15)] flex justify-between items-center px-margin-mobile py-sm">
+<div class="flex items-center gap-sm">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container transition-colors" onclick="history.back()">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">New Reminder</h1>
+</div>
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-32 pb-32 px-margin-mobile max-w-2xl mx-auto space-y-lg">
+<!-- Form Section -->
+<section class="space-y-md">
+<!-- Event Name -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-2">Event Name</label>
+<input class="w-full bg-surface-container-low border-none ring-1 ring-on-surface/5 focus:ring-2 focus:ring-primary h-14 px-md rounded-[24px] font-body-md text-body-md transition-all outline-none" placeholder="e.g., Deep Meditation" type="text"/>
+</div>
+<!-- Date & Time Row -->
+<div class="grid grid-cols-2 gap-gutter-mobile">
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-2">Date</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none ring-1 ring-on-surface/5 focus:ring-2 focus:ring-primary h-14 px-md rounded-[24px] font-body-md text-body-md transition-all outline-none appearance-none" type="date"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none">calendar_today</span>
+</div>
+</div>
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-2">Time</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none ring-1 ring-on-surface/5 focus:ring-2 focus:ring-primary h-14 px-md rounded-[24px] font-body-md text-body-md transition-all outline-none appearance-none" type="time"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none">schedule</span>
+</div>
+</div>
+</div>
+<!-- Category Pill Selection -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-2">Category</label>
+<div class="flex flex-wrap gap-base pt-2">
+<button class="px-md py-sm rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md custom-shadow transition-transform active:scale-95">Sleep</button>
+<button class="px-md py-sm rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md ring-1 ring-on-surface/5 transition-all hover:bg-secondary-container/30 active:scale-95">Mindfulness</button>
+<button class="px-md py-sm rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md ring-1 ring-on-surface/5 transition-all hover:bg-secondary-container/30 active:scale-95">Hydration</button>
+<button class="px-md py-sm rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md ring-1 ring-on-surface/5 transition-all hover:bg-secondary-container/30 active:scale-95">Reading</button>
+</div>
+</div>
+<!-- Notification Toggle -->
+<div class="flex items-center justify-between bg-surface-container-low p-md rounded-[24px] ring-1 ring-on-surface/5">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+<span class="font-body-md text-body-md text-on-surface">Enable Notifications</span>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-secondary-container right-6 checked:right-0 transition-all duration-300" id="toggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-dim cursor-pointer transition-colors duration-300" for="toggle"></label>
+</div>
+</div>
+</section>
+<!-- Integrated Ad Slot -->
+<section class="bg-surface-container-lowest p-md rounded-[24px] flex items-center gap-md border border-on-surface/5 shadow-[0_12px_32px_rgba(135,206,235,0.1)] transition-transform duration-700 ease-in-out" id="ad-card">
+<div class="w-16 h-16 rounded-xl bg-secondary-fixed flex-shrink-0 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A premium minimalist illustration of a lavender-scented sleep spray bottle, presented in a clean studio setting with soft sky-blue lighting and atmospheric clarity. The image has a calm, high-end wellness aesthetic, using soft-focus elements to convey tranquility and luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSR4T8j5V8Qp2cvlYHRiuahkLAtBEtsiYcRry7LiR_p3MeSj-6wq7EirCP_dLHbS2XbtOtMugBZbRCKuv_wbC7RaAwpUayYc4-1OVxg7F8tDu52oCgNmB9gby891XtiTj8_ohT8NBFgxrIUlzZWn4pj9Ip2L3p2_yc0okdseJmXONrOmC8mZs-m863QiAgHiDsi3-AzHRKuDWJFWt7I16CxQkuLpbZ9rHfSqEG7x19gBUEcIDrlWUzX3izr1MZEbCo-t8NZRPioiKo"/>
+</div>
+<div class="flex-grow">
+<div class="flex items-center justify-between">
+<span class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/40">Sponsored</span>
+<button class="text-primary"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface leading-tight">Better Sleep Awaits</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">Try our organic lavender mist tonight.</p>
+</div>
+</section>
+<!-- Save Button -->
+<div class="pt-lg">
+<button class="w-full bg-primary text-on-primary h-16 rounded-[24px] font-title-md text-title-md shadow-[0_12px_32px_rgba(12,103,128,0.25)] flex items-center justify-center gap-sm transition-transform active:scale-95 hover:opacity-90">
+<span>Save Reminder</span>
+<span class="material-symbols-outlined">check_circle</span>
+</button>
+</div>
+</main>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-4 pt-3 bg-surface/60 backdrop-blur-3xl border-t border-on-surface/5 rounded-t-[24px] z-50">
+<div class="flex flex-col items-center justify-center text-on-surface-variant/70 px-5 py-2">
+<span class="material-symbols-outlined">home_app_logo</span>
+<span class="font-label-md text-label-md">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container/50 text-on-secondary-container rounded-full px-5 py-2 transition-all duration-500 ease-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="font-label-md text-label-md">Reminders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant/70 px-5 py-2">
+<span class="material-symbols-outlined">bedtime</span>
+<span class="font-label-md text-label-md">Sleep</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant/70 px-5 py-2">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</div>
+</nav>
+<script>
+        // Simple Interaction logic for category selection
+        const pills = document.querySelectorAll('.flex.flex-wrap.gap-base button');
+        pills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                pills.forEach(p => {
+                    p.classList.remove('bg-primary-container', 'text-on-primary-container', 'custom-shadow');
+                    p.classList.add('bg-surface-container-low', 'text-on-surface-variant', 'ring-1', 'ring-on-surface/5');
+                });
+                pill.classList.add('bg-primary-container', 'text-on-primary-container', 'custom-shadow');
+                pill.classList.remove('bg-surface-container-low', 'text-on-surface-variant', 'ring-1', 'ring-on-surface/5');
+            });
+        });
+
+        // Floating Micro-animation for Ad
+        const adCard = document.getElementById('ad-card');
+        if (adCard) {
+            let angle = 0;
+            function animateAd() {
+                angle += 0.02;
+                const y = Math.sin(angle) * 3;
+                adCard.style.transform = `translateY(${y}px)`;
+                requestAnimationFrame(animateAd);
+            }
+            animateAd();
+        }
+    </script>
+</body></html>
