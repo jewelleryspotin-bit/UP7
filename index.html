@@ -172,7 +172,7 @@
                 <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
                     <span class="material-symbols-outlined text-white text-[24px]">waves</span>
                 </div>
-                <h1 class="font-extrabold text-2xl tracking-tight text-primary">UP7</h1>
+                <h1 class="font-extrabold text-2xl tracking-tight text-primary flex items-center gap-1.5">UP7 <span class="text-xs font-bold bg-primary/10 text-primary px-2 py-0.5 rounded-full">v3.5.0</span></h1>
             </div>
             
             <nav class="flex items-center gap-8 font-semibold text-teal-950/80 text-[15px]">
@@ -313,7 +313,7 @@
                     <span class="material-symbols-outlined text-white text-[20px]">waves</span>
                 </div>
                 <div class="text-left">
-                    <h5 class="font-bold text-xs">UP7 Sleep Companion</h5>
+                    <h5 class="font-bold text-xs">UP7 Sleep Companion <span class="text-[9px] bg-white/10 px-1 py-0.5 rounded ml-1 font-mono text-primary-container">v3.5.0</span></h5>
                     <p class="text-[10px] opacity-60">Free on iOS and Android</p>
                 </div>
             </div>
@@ -372,6 +372,30 @@
         let sleepActiveTime = 0;
         let sleepTimerInterval = null;
 
+        // PWA Installation Prompter
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+        });
+
+        function triggerPwaInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                    closeStoreAlert();
+                });
+            }
+        }
+
         // Smart Banner dismiss
         function dismissBanner() {
             document.getElementById('smart-banner').classList.add('hidden');
@@ -419,31 +443,43 @@
                     </div>
                 `;
             } else {
-                container.innerHTML = `
-                    <h4 class="font-extrabold text-teal-950 text-lg">Chrome Install (Android)</h4>
-                    <p class="text-teal-900/60 text-xs mt-1 leading-relaxed">Add UP7 to your Home Screen directly from Chrome browser to install the standalone application:</p>
-                    
-                    <div class="w-full text-left space-y-3 mt-4 bg-teal-50/50 p-4 rounded-2xl border border-primary/5">
-                        <div class="flex items-start gap-3">
-                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
-                            <p class="text-xs text-teal-950 font-medium">Open this site in <strong class="text-primary font-bold">Google Chrome</strong> browser.</p>
+                if (deferredPrompt) {
+                    container.innerHTML = `
+                        <h4 class="font-extrabold text-teal-950 text-lg">Install PWA Directly</h4>
+                        <p class="text-teal-900/60 text-xs mt-1 leading-relaxed">Your browser supports direct installation. Click below to install UP7 on your device instantly:</p>
+                        
+                        <button onclick="triggerPwaInstall()" class="w-full mt-4 py-3.5 bg-primary hover:bg-primary/95 text-white font-bold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                            <span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+                            Install UP7 App
+                        </button>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <h4 class="font-extrabold text-teal-950 text-lg">Chrome Install (Android)</h4>
+                        <p class="text-teal-900/60 text-xs mt-1 leading-relaxed">Add UP7 to your Home Screen directly from Chrome browser to install the standalone application:</p>
+                        
+                        <div class="w-full text-left space-y-3 mt-4 bg-teal-50/50 p-4 rounded-2xl border border-primary/5">
+                            <div class="flex items-start gap-3">
+                                <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                                <p class="text-xs text-teal-950 font-medium">Open this site in <strong class="text-primary font-bold">Google Chrome</strong> browser.</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                                <p class="text-xs text-teal-950 font-medium flex items-center flex-wrap gap-1">
+                                    Tap the <strong class="text-primary font-bold">Menu <span class="material-symbols-outlined text-[15px] align-middle">more_vert</span></strong> button in Chrome's top-right corner.
+                                </p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                                <p class="text-xs text-teal-950 font-medium">Select <strong class="text-primary font-bold">"Install app"</strong> (or "Add to Home Screen") from the menu list.</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">4</span>
+                                <p class="text-xs text-teal-950 font-medium">Tap <strong class="text-primary font-bold">"Install"</strong> in the prompt to pin it to your apps list.</p>
+                            </div>
                         </div>
-                        <div class="flex items-start gap-3">
-                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
-                            <p class="text-xs text-teal-950 font-medium flex items-center flex-wrap gap-1">
-                                Tap the <strong class="text-primary font-bold">Menu <span class="material-symbols-outlined text-[15px] align-middle">more_vert</span></strong> button in Chrome's top-right corner.
-                            </p>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
-                            <p class="text-xs text-teal-950 font-medium">Select <strong class="text-primary font-bold">"Install app"</strong> (or "Add to Home Screen") from the menu list.</p>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">4</span>
-                            <p class="text-xs text-teal-950 font-medium">Tap <strong class="text-primary font-bold">"Install"</strong> in the prompt to pin it to your apps list.</p>
-                        </div>
-                    </div>
-                `;
+                    `;
+                }
             }
             
             document.getElementById('store-modal').classList.remove('hidden');
@@ -573,7 +609,10 @@
                 <header class="w-full bg-white/60 backdrop-blur-xl flex justify-between items-center px-6 py-4 border-b border-primary/5 select-none relative z-30 shrink-0">
                     <div class="flex items-center gap-2">
                         ${backBtn}
-                        <h1 class="font-bold text-xl tracking-tight text-primary">${title}</h1>
+                        <h1 class="font-bold text-xl tracking-tight text-primary flex items-center gap-1.5">
+                            ${title}
+                            <span class="text-[9px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">v3.5.0</span>
+                        </h1>
                     </div>
                     <div class="flex items-center gap-3">
                         <span class="text-[13px] font-bold tracking-tight text-on-surface/60">${systemTime}</span>
