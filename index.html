@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+    <title>UP7 - Ethereal Sleep Companion</title>
+    
+    <!-- Tailwind CSS with Forms and Container Queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Typography & Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0c6780",
+                        "primary-container": "#87ceeb",
+                        "on-primary-container": "#005870",
+                        surface: "#e2fffe",
+                        "surface-dim": "#bee1e0",
+                        "surface-bright": "#e2fffe",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#d7fafa",
+                        "surface-container": "#d2f5f4",
+                        "surface-container-high": "#ccefee",
+                        "surface-container-highest": "#c6e9e9",
+                        "on-surface": "#002020",
+                        "on-surface-variant": "#3f484c",
+                        secondary: "#366572",
+                        "secondary-container": "#baeafa",
+                        "on-secondary-container": "#3c6b78",
+                        error: "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a"
+                    },
+                    borderRadius: {
+                        "card": "24px"
+                    },
+                    boxShadow: {
+                        "premium": "0 12px 32px rgba(135, 206, 235, 0.15)",
+                        "sky-glow": "0 12px 32px rgba(12, 103, 128, 0.12)"
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f0fdfa;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+        }
+        
+        /* Floating background orbs */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.45;
+            animation: drift 25s infinite alternate ease-in-out;
+        }
+        .bg-orb-1 { width: 600px; height: 600px; background: #e2fffe; top: -10%; left: -10%; }
+        .bg-orb-2 { width: 500px; height: 500px; background: #baeafa; bottom: -10%; right: -5%; animation-delay: -5s; }
+        .bg-orb-3 { width: 400px; height: 400px; background: #d7fafa; top: 40%; right: 20%; animation-delay: -10s; }
+        
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(4%, 6%) scale(1.08); }
+            100% { transform: translate(-4%, 4%) scale(0.95); }
+        }
+        
+        /* Smooth transitions */
+        .page-transition {
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        
+        /* Hide scrollbars */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Custom App Shell frame styles */
+        .simulator-phone {
+            width: 395px;
+            height: 844px;
+            box-shadow: 0 25px 60px -15px rgba(0, 32, 32, 0.25), 
+                        0 0 0 12px #1f2937, 
+                        0 0 0 13px #374151, 
+                        0 0 0 20px #111827;
+            border-radius: 48px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Dynamic Island Mockup */
+        .dynamic-island {
+            width: 110px;
+            height: 30px;
+            background: #111827;
+            border-radius: 20px;
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        /* Ambient glowing backgrounds for themes */
+        .theme-ethereal-bg {
+            background-color: #e2fffe !important;
+            color: #002020 !important;
+        }
+        .theme-ad-bg {
+            background-color: #FAF9F6 !important;
+            color: #002020 !important;
+        }
+        
+        /* Custom switches and states */
+        .active-btn {
+            background-color: rgba(12, 103, 128, 0.08) !important;
+            border-color: #0c6780 !important;
+            color: #0c6780 !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 relative antialiased selection:bg-teal-200">
+    <!-- Ambient Background Orbs -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+
+    <!-- MAIN WEB INTERFACE (DESKTOP MODE) -->
+    <div id="desktop-landing" class="hidden lg:flex flex-col min-h-screen max-w-7xl mx-auto px-6 py-8 relative z-10 justify-between gap-10">
+        <!-- Navigation Header -->
+        <header class="flex justify-between items-center w-full py-2">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined text-white text-[24px]">waves</span>
+                </div>
+                <h1 class="font-extrabold text-2xl tracking-tight text-primary">UP7</h1>
+            </div>
+            
+            <nav class="flex items-center gap-8 font-semibold text-teal-950/80 text-[15px]">
+                <a href="#features" class="hover:text-primary transition-colors">Features</a>
+                <a href="#download" class="hover:text-primary transition-colors">App Download</a>
+                <a href="#philosophy" class="hover:text-primary transition-colors">Design Style</a>
+                <span class="h-4 w-px bg-teal-900/10"></span>
+                <div class="flex gap-2">
+                    <button onclick="switchTheme('ethereal')" id="toggle-opt-ethereal" class="px-3 py-1 rounded-full text-xs font-bold bg-primary text-white border border-primary transition-all">Ethereal Rest</button>
+                    <button onclick="switchTheme('ad')" id="toggle-opt-ad" class="px-3 py-1 rounded-full text-xs font-bold bg-white text-teal-900 border border-teal-900/10 transition-all hover:bg-teal-50">Ad-Integrated</button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Hero & Showcase -->
+        <main class="grid lg:grid-cols-12 gap-12 items-center my-auto">
+            <!-- Marketing & Download Columns -->
+            <div class="lg:col-span-7 flex flex-col gap-8 text-left max-w-xl">
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-wide uppercase mb-4">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                        </span>
+                        NEW VERSION 3.5 OUT NOW
+                    </span>
+                    <h2 class="text-5xl lg:text-6xl font-extrabold tracking-tight text-teal-950 leading-[1.08]">
+                        Breathable Rest, <br/><span class="text-primary font-medium italic">At Your Fingertips.</span>
+                    </h2>
+                    <p class="text-lg text-teal-900/70 mt-6 leading-relaxed">
+                        UP7 is a minimalist sleep companion app designed under the "Atmospheric Clarity" philosophy. Drift away with gentle audio landscapes, clear schedule reminders, and intelligent sleep tracking.
+                    </p>
+                </div>
+
+                <!-- Download App Part -->
+                <div id="download" class="glass-panel rounded-card p-6 border border-white/60 shadow-sky-glow flex flex-col gap-5">
+                    <div>
+                        <h4 class="font-extrabold text-teal-950 text-lg">Get the UP7 Native Mobile App</h4>
+                        <p class="text-teal-900/60 text-sm mt-1">Available worldwide. Download now to sync your sleep logs seamlessly.</p>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-4">
+                        <!-- Apple App Store Button -->
+                        <a href="javascript:void(0)" onclick="openStoreAlert('iOS')" class="flex items-center gap-3 bg-slate-900 text-white rounded-2xl px-5 py-3 hover:bg-slate-800 transition-all active:scale-95 shadow-md shadow-slate-950/10 border border-white/10 select-none">
+                            <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24">
+                                <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,22C14.32,22.05 13.89,21.24 12.37,21.24C10.84,21.24 10.37,22 9.09,22.05C7.79,22.1 6.8,20.78 5.96,19.5C4.26,17 2.96,12.39 4.7,9.36C5.56,7.87 7.1,6.93 8.78,6.9C10.05,6.88 11.24,7.76 12.03,7.76C12.82,7.76 14.26,6.7 15.78,6.86C16.42,6.89 18.2,7.12 19.33,8.78C19.24,8.83 17.1,10.08 17.12,12.6C17.15,15.64 19.79,16.65 19.82,16.66C19.8,16.72 19.39,18.16 18.71,19.5M15.97,4.17C16.63,3.37 17.07,2.28 16.95,1C16,1.04 14.9,1.6 14.24,2.38C13.68,3.04 13.19,4.14 13.34,5.39C14.39,5.47 15.4,4.88 15.97,4.17Z"/>
+                            </svg>
+                            <div class="text-left leading-none">
+                                <span class="text-[10px] uppercase tracking-wider opacity-60">Download on the</span>
+                                <p class="text-sm font-bold mt-0.5">App Store</p>
+                            </div>
+                        </a>
+                        
+                        <!-- Google Play Store Button -->
+                        <a href="javascript:void(0)" onclick="openStoreAlert('Android')" class="flex items-center gap-3 bg-slate-900 text-white rounded-2xl px-5 py-3 hover:bg-slate-800 transition-all active:scale-95 shadow-md shadow-slate-950/10 border border-white/10 select-none">
+                            <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24">
+                                <path d="M5,3L16.2,14.2L5,21.4C4.6,21.2 4.3,20.8 4.3,20.3V4.7C4.3,4.2 4.6,3.8 5,3M17.7,15.6L19,16.9L7,22L17.7,15.6M21,12C21,12.4 20.8,12.8 20.5,13.1L18.4,15L15.3,11.9L18.4,8.8L20.5,10.7C20.8,11 21,11.4 21,12M17.7,8.4L7,2L19,7.1L17.7,8.4Z"/>
+                            </svg>
+                            <div class="text-left leading-none">
+                                <span class="text-[10px] uppercase tracking-wider opacity-60">Get it on</span>
+                                <p class="text-sm font-bold mt-0.5">Google Play</p>
+                            </div>
+                        </a>
+
+                        <!-- QR Code Popover Mock -->
+                        <div class="flex items-center gap-3 ml-auto bg-white/50 p-2.5 rounded-2xl border border-white">
+                            <div class="w-12 h-12 bg-teal-950/5 rounded-lg flex items-center justify-center p-1">
+                                <!-- QR Mock -->
+                                <svg class="w-full h-full text-teal-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="2" width="6" height="6" rx="1"/>
+                                    <rect x="16" y="2" width="6" height="6" rx="1"/>
+                                    <rect x="2" y="16" width="6" height="6" rx="1"/>
+                                    <path d="M16 16h2v2h-2zm4 4h2v2h-2zm-2 2h2v-2h-2zm2-4h2v-2h-2zm-6-2h2v2h-2zm2 2h2v2h-2zm-2 2h2v-2h-2z"/>
+                                </svg>
+                            </div>
+                            <div class="text-left select-none">
+                                <p class="text-xs font-bold text-teal-950">Scan to Install</p>
+                                <p class="text-[10px] text-teal-900/60 leading-none mt-0.5">iOS & Android</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Grid -->
+                <div id="features" class="grid grid-cols-3 gap-4">
+                    <div class="p-4 bg-white/40 rounded-3xl border border-white/60">
+                        <span class="material-symbols-outlined text-primary text-2xl mb-1">timer</span>
+                        <h5 class="font-bold text-teal-950 text-sm">Sleep Timers</h5>
+                        <p class="text-xs text-teal-900/60 mt-0.5">Fade-out audio loops slowly to sync sleep.</p>
+                    </div>
+                    <div class="p-4 bg-white/40 rounded-3xl border border-white/60">
+                        <span class="material-symbols-outlined text-primary text-2xl mb-1">notifications_active</span>
+                        <h5 class="font-bold text-teal-950 text-sm">Reminders</h5>
+                        <p class="text-xs text-teal-900/60 mt-0.5">Organize daily events & bedtime routine events.</p>
+                    </div>
+                    <div class="p-4 bg-white/40 rounded-3xl border border-white/60">
+                        <span class="material-symbols-outlined text-primary text-2xl mb-1">auto_awesome</span>
+                        <h5 class="font-bold text-teal-950 text-sm">Ethereal Rest</h5>
+                        <p class="text-xs text-teal-900/60 mt-0.5">Aesthetic, high-key wellness user interfaces.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App Phone Simulator Column -->
+            <div class="lg:col-span-5 flex justify-center items-center">
+                <div class="relative">
+                    <!-- Glow effect behind simulator -->
+                    <div class="absolute -inset-4 bg-gradient-to-tr from-[#87ceeb]/30 to-teal-300/30 rounded-[60px] blur-3xl opacity-80 -z-10 animate-pulse"></div>
+                    
+                    <!-- Phone Container -->
+                    <div class="simulator-phone bg-teal-50 border-[4px] border-slate-800">
+                        <!-- Dynamic Island -->
+                        <div class="dynamic-island"></div>
+                        
+                        <!-- Internal App Container -->
+                        <div id="app-viewport" class="w-full h-full overflow-hidden flex flex-col theme-ethereal-bg text-on-surface">
+                            <!-- This will mount our interactive application screens -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="flex justify-between items-center text-xs text-teal-900/50 pt-6 border-t border-teal-950/5 font-semibold select-none">
+            <p>© 2026 UP7 Wellness Technologies. All rights reserved.</p>
+            <p>Built with Atmospheric Clarity Philosophy</p>
+        </footer>
+    </div>
+
+
+    <!-- MOBILE / EMBEDDED PHONE VIEW PORTAL (DYN-ADAPTIVE) -->
+    <div id="mobile-viewport-container" class="lg:hidden flex flex-col min-h-screen w-full relative z-10">
+        <!-- Dismissible Download Smart App Banner at Top -->
+        <div id="smart-banner" class="w-full bg-slate-900 text-white px-4 py-3 flex items-center justify-between border-b border-white/10 shadow-lg relative z-50">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center shadow-lg">
+                    <span class="material-symbols-outlined text-white text-[20px]">waves</span>
+                </div>
+                <div class="text-left">
+                    <h5 class="font-bold text-xs">UP7 Sleep Companion</h5>
+                    <p class="text-[10px] opacity-60">Free on iOS and Android</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openStoreAlert('native')" class="bg-primary hover:bg-primary/95 text-white font-bold text-xs px-4 py-1.5 rounded-full shadow transition-all active:scale-95">GET</button>
+                <button onclick="dismissBanner()" class="text-white/40 hover:text-white p-1">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Phone App Viewport (Takes full screen) -->
+        <div id="mobile-app-shell" class="flex-1 w-full flex flex-col relative overflow-hidden theme-ethereal-bg text-on-surface">
+            <!-- App content mounts here -->
+        </div>
+    </div>
+
+
+    <!-- APP STORE MOCK DIALOG -->
+    <div id="store-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-teal-950/30 backdrop-blur-md">
+        <div class="bg-white rounded-[32px] p-6 max-w-sm w-full border border-teal-950/5 shadow-2xl relative">
+            <button onclick="closeStoreAlert()" class="absolute right-4 top-4 w-9 h-9 bg-slate-100 hover:bg-slate-200 transition-colors rounded-full flex items-center justify-center text-slate-800">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+            
+            <div class="text-center flex flex-col items-center gap-4 mt-2">
+                <div class="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/20">
+                    <span class="material-symbols-outlined text-white text-[32px]">waves</span>
+                </div>
+                <div>
+                    <h4 class="font-extrabold text-teal-950 text-xl" id="store-modal-title">Install UP7 Companion</h4>
+                    <p class="text-teal-900/60 text-sm mt-1 leading-relaxed">Direct installation download triggered for your device.</p>
+                </div>
+                
+                <!-- Graphic Simulator for downloading -->
+                <div class="w-full bg-emerald-50 rounded-2xl p-4 border border-emerald-500/10 flex flex-col gap-3 items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-emerald-600 animate-bounce">downloading</span>
+                        <span class="font-bold text-xs text-emerald-800" id="store-modal-status">Preparing direct installer...</span>
+                    </div>
+                    <div class="w-full bg-emerald-100 rounded-full h-2 overflow-hidden">
+                        <div class="bg-emerald-600 h-full w-[85%] rounded-full animate-[progress_3s_ease-out]"></div>
+                    </div>
+                </div>
+
+                <!-- Text message fallback -->
+                <div class="w-full border-t border-teal-950/5 pt-4">
+                    <label class="block text-xs font-bold text-teal-900/60 text-left mb-1.5 uppercase tracking-wide">Or text yourself the link</label>
+                    <div class="flex gap-2">
+                        <input id="link-sms-input" type="tel" placeholder="+1 (555) 000-0000" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary"/>
+                        <button onclick="sendLinkMock()" class="bg-primary hover:bg-primary/95 text-white font-bold text-xs px-4 rounded-xl shadow transition-all active:scale-95">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- INTERACTIVE APP SIMULATION LOGIC (VARS) -->
+    <!-- ========================================== -->
+    <script>
+        // Global App State
+        let currentTheme = 'ethereal'; // 'ethereal' or 'ad'
+        let currentScreen = 'home'; // 'home', 'reminders', 'add-reminder', 'sleep-active'
+        let alarms = [
+            { id: 1, name: "Mom’s Birthday", time: "All day event", icon: "🎂" },
+            { id: 2, name: "Economics Exam", time: "10:00 AM", icon: "📚" },
+            { id: 3, name: "Electricity Bill", time: "5:00 PM", icon: "💳" },
+            { id: 4, name: "Trip to Delhi", time: "8:30 PM", icon: "✈️" }
+        ];
+        
+        let timerDuration = '30m';
+        let fadeOutMusic = true;
+        let sleepActiveTime = 0;
+        let sleepTimerInterval = null;
+
+        // Smart Banner dismiss
+        function dismissBanner() {
+            document.getElementById('smart-banner').classList.add('hidden');
+        }
+
+        // Install Direct Mock Dialog
+        function openStoreAlert(platform) {
+            const title = document.getElementById('store-modal-title');
+            const status = document.getElementById('store-modal-status');
+            
+            if (platform === 'iOS') {
+                title.innerText = "Download for iOS Device";
+                status.innerText = "Redirecting to App Store...";
+            } else if (platform === 'Android') {
+                title.innerText = "Download for Android Device";
+                status.innerText = "Redirecting to Google Play Store...";
+            } else {
+                title.innerText = "Install UP7 App";
+                status.innerText = "Detecting device and downloading...";
+            }
+            
+            document.getElementById('store-modal').classList.remove('hidden');
+        }
+
+        function closeStoreAlert() {
+            document.getElementById('store-modal').classList.add('hidden');
+        }
+
+        function sendLinkMock() {
+            const val = document.getElementById('link-sms-input').value;
+            if(!val) {
+                alert("Please enter a valid mobile number.");
+                return;
+            }
+            alert("✨ An SMS with a link to download the UP7 App has been simulated to your mobile number: " + val);
+            closeStoreAlert();
+        }
+
+        // Switching themes dynamically
+        function switchTheme(theme) {
+            currentTheme = theme;
+            
+            const etherealBtn = document.getElementById('toggle-opt-ethereal');
+            const adBtn = document.getElementById('toggle-opt-ad');
+            
+            if (theme === 'ethereal') {
+                etherealBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-primary text-white border border-primary transition-all";
+                adBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-white text-teal-900 border border-teal-900/10 transition-all hover:bg-teal-50";
+            } else {
+                etherealBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-white text-teal-900 border border-teal-900/10 transition-all hover:bg-teal-50";
+                adBtn.className = "px-3 py-1 rounded-full text-xs font-bold bg-primary text-white border border-primary transition-all";
+            }
+            
+            // Re-render app viewports
+            renderApp();
+        }
+
+        // NAVIGATION LOGIC
+        function navigateTo(screen) {
+            currentScreen = screen;
+            
+            // Handle active timer loops if starting or stopping sleep mode
+            if (screen === 'sleep-active') {
+                sleepActiveTime = 0;
+                if (sleepTimerInterval) clearInterval(sleepTimerInterval);
+                sleepTimerInterval = setInterval(() => {
+                    sleepActiveTime++;
+                    const clockEl = document.getElementById('sleep-counter-clock');
+                    if (clockEl) {
+                        const mins = Math.floor(sleepActiveTime / 60).toString().padStart(2, '0');
+                        const secs = (sleepActiveTime % 60).toString().padStart(2, '0');
+                        clockEl.innerText = `${mins}:${secs}`;
+                    }
+                }, 1000);
+            } else {
+                if (sleepTimerInterval) {
+                    clearInterval(sleepTimerInterval);
+                    sleepTimerInterval = null;
+                }
+            }
+            
+            renderApp();
+        }
+
+        // CRUD: Reminders
+        function addReminder(event) {
+            event.preventDefault();
+            const name = document.getElementById('input-event-name').value || "Bedtime Meditation";
+            const timeVal = document.getElementById('input-event-time').value || "22:30";
+            
+            let emoji = '🧘';
+            if (selectedCategory === 'Mindfulness') emoji = '🌸';
+            if (selectedCategory === 'Hydration') emoji = '💧';
+            if (selectedCategory === 'Reading') emoji = '📖';
+            if (selectedCategory === 'Sleep') emoji = '🛌';
+            
+            // Parse time into readable string
+            let readableTime = timeVal;
+            try {
+                if (timeVal.includes(':')) {
+                    const [hrs, mins] = timeVal.split(':');
+                    const hour = parseInt(hrs);
+                    const ampm = hour >= 12 ? 'PM' : 'AM';
+                    const displayHour = hour % 12 || 12;
+                    readableTime = `${displayHour}:${mins} ${ampm}`;
+                }
+            } catch (e) {}
+
+            alarms.unshift({
+                id: Date.now(),
+                name: name,
+                time: readableTime,
+                icon: emoji
+            });
+
+            navigateTo('reminders');
+        }
+
+        function deleteAlarm(id) {
+            alarms = alarms.filter(a => a.id !== id);
+            renderApp();
+        }
+
+        // TIME HELPER FOR TOP BAR
+        function getSystemTimeString() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // ==========================================
+        // SCREEN RENDERERS
+        // ==========================================
+        
+        // Header HTML (Shared status bar styling)
+        function renderHeader(title, showBack = false, backTarget = 'home') {
+            const systemTime = getSystemTimeString();
+            const backBtn = showBack 
+                ? `<button type="button" onclick="navigateTo('${backTarget}')" class="flex items-center justify-center p-2 rounded-full hover:bg-black/5 active:scale-95 transition-all">
+                       <span class="material-symbols-outlined text-primary text-[22px]">arrow_back</span>
+                   </button>`
+                : `<div class="w-10 h-10 flex items-center justify-center">
+                       <img alt="Up7 Logo" class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/AP1WRLuhefTtpa_1PAXpXy2U8KNjADyhKLPRd2a7odIM0lrZUDtZsTl1Mh4kqHqjFHP7uQPOQeOLzsP9V9qOdCAX34O-DukIw7nEeZvuAWz0-q-X5ErERrzmEgGCJnVKanb9a9L6xTK-5sTNJ7hikb94r7Ki-cx54rKFmLqD-SGcqskcoY-wGrgdYx--k1CbtAvB9OOVUwqXYVjz2MjY4G17_G2DCp3qpWJ21yaaeoDFKS5IDYDq1QTurGTR9BLl"/>
+                   </div>`;
+
+            return `
+                <header class="w-full bg-white/60 backdrop-blur-xl flex justify-between items-center px-6 py-4 border-b border-primary/5 select-none relative z-30 shrink-0">
+                    <div class="flex items-center gap-2">
+                        ${backBtn}
+                        <h1 class="font-bold text-xl tracking-tight text-primary">${title}</h1>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-[13px] font-bold tracking-tight text-on-surface/60">${systemTime}</span>
+                        <button type="button" onclick="openStoreAlert('native')" class="w-9 h-9 rounded-full bg-white/80 flex items-center justify-center shadow-sm border border-primary/5 active:scale-90 transition-transform">
+                            <span class="material-symbols-outlined text-[20px] text-primary">download</span>
+                        </button>
+                    </div>
+                </header>
+            `;
+        }
+
+        // Bottom Nav HTML (Shared app navigations)
+        function renderBottomNav(activeItem) {
+            const activeClass = "bg-primary text-white rounded-full px-5 py-2.5 shadow-md shadow-primary/20";
+            const inactiveClass = "flex items-center justify-center w-11 h-11 text-primary/40 hover:text-primary transition-colors";
+            
+            return `
+                <nav class="w-full flex justify-around items-center p-3 bg-white/70 backdrop-blur-2xl z-30 rounded-t-[28px] border-t border-primary/5 shadow-[0_-10px_30px_rgba(12,103,128,0.08)] shrink-0 pb-6">
+                    <a class="${activeItem === 'home' ? activeClass : inactiveClass} transition-all duration-200" href="javascript:void(0)" onclick="navigateTo('home')">
+                        <span class="material-symbols-outlined text-[22px]">home</span>
+                        ${activeItem === 'home' ? '<span class="font-bold text-[13px] tracking-tight ml-1">Home</span>' : ''}
+                    </a>
+                    <a class="${activeItem === 'reminders' ? activeClass : inactiveClass} transition-all duration-200" href="javascript:void(0)" onclick="navigateTo('reminders')">
+                        <span class="material-symbols-outlined text-[22px]">notifications_active</span>
+                        ${activeItem === 'reminders' ? '<span class="font-bold text-[13px] tracking-tight ml-1">Reminders</span>' : ''}
+                    </a>
+                    <a class="${activeItem === 'sleep-active' ? activeClass : inactiveClass} transition-all duration-200" href="javascript:void(0)" onclick="navigateTo('sleep-active')">
+                        <span class="material-symbols-outlined text-[22px]">bedtime</span>
+                        ${activeItem === 'sleep-active' ? '<span class="font-bold text-[13px] tracking-tight ml-1">Sleep</span>' : ''}
+                    </a>
+                    <a class="${inactiveClass}" href="javascript:void(0)" onclick="openStoreAlert('native')">
+                        <span class="material-symbols-outlined text-[22px]">download</span>
+                    </a>
+                </nav>
+            `;
+        }
+
+        // Ad Slot component
+        function renderAdSlot() {
+            if (currentTheme !== 'ad') return '';
+            return `
+                <!-- Ad Integrated Product Promotion Card -->
+                <div class="bg-surface-container-lowest rounded-card p-5 border border-white/60 mb-2">
+                    <div class="flex flex-col gap-3.5 text-left">
+                        <div class="flex justify-between items-start">
+                            <span class="bg-primary/10 text-primary text-[9px] font-extrabold uppercase tracking-[0.15em] px-2 py-0.5 rounded">Sponsored</span>
+                            <span class="material-symbols-outlined text-primary/30 text-sm">info</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-surface-container-low border border-primary/5 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+                                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSR4T8j5V8Qp2cvlYHRiuahkLAtBEtsiYcRry7LiR_p3MeSj-6wq7EirCP_dLHbS2XbtOtMugBZbRCKuv_wbC7RaAwpUayYc4-1OVxg7F8tDu52oCgNmB9gby891XtiTj8_ohT8NBFgxrIUlzZWn4pj9Ip2L3p2_yc0okdseJmXONrOmC8mZs-m863QiAgHiDsi3-AzHRKuDWJFWt7I16CxQkuLpbZ9rHfSqEG7x19gBUEcIDrlWUzX3izr1MZEbCo-t8NZRPioiKo" alt="Lavender oil"/>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-[15px] tracking-tight text-on-surface">Pure Lavender Sleep Oils</h4>
+                                <p class="text-[12px] text-on-surface-variant/80 mt-0.5 leading-snug">Certified organic essential oils designed to extend deep REM sleep cycles.</p>
+                            </div>
+                        </div>
+                        <button type="button" class="mt-1 w-full py-2.5 rounded-xl border border-primary/20 text-primary font-bold text-[12px] flex items-center justify-center gap-1 hover:bg-primary/5 transition-colors active:scale-95">
+                            Shop Collection <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- AdMob Banner slot -->
+                <div class="w-full flex justify-center py-1.5 shrink-0 select-none">
+                    <div class="w-[320px] h-[50px] bg-primary/5 rounded-lg border border-primary/10 flex flex-col items-center justify-center overflow-hidden">
+                        <span class="text-[8px] font-bold text-primary/30 uppercase tracking-widest mb-0.5">Advertisement</span>
+                        <div class="flex items-center gap-2 opacity-10">
+                            <div class="w-4 h-4 bg-primary rounded-sm"></div>
+                            <div class="h-1 w-16 bg-primary rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // SCREENS GENERATOR
+        function renderHome() {
+            const bgClass = currentTheme === 'ethereal' ? 'theme-ethereal-bg' : 'theme-ad-bg';
+            
+            // Timer button class logic
+            const activeBtn = "py-3 px-1.5 rounded-xl border border-primary bg-primary/5 text-primary font-bold text-xs transition-all active:scale-95";
+            const inactiveBtn = "py-3 px-1.5 rounded-xl border border-primary/5 bg-surface-container-low text-on-surface-variant font-bold text-xs transition-all active:scale-95";
+
+            // Render top reminders
+            let scheduleItems = '';
+            alarms.slice(0, 4).forEach(al => {
+                scheduleItems += `
+                    <div class="flex items-center gap-3.5 p-3.5 bg-surface-container-low/50 rounded-2xl border border-primary/5">
+                        <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-md shadow-sm">${al.icon}</div>
+                        <div class="flex-1 text-left">
+                            <p class="font-bold text-[13px] text-on-surface leading-tight">${al.name}</p>
+                            <p class="text-[11px] font-medium text-on-surface-variant/60 mt-0.5">${al.time}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            if (alarms.length === 0) {
+                scheduleItems = '<p class="text-xs text-on-surface-variant/50 text-center py-4">No events scheduled.</p>';
+            }
+
+            return `
+                ${renderHeader('Up7')}
+                <!-- Main Body Scroll -->
+                <div class="flex-1 overflow-y-auto px-6 py-4 space-y-5 no-scrollbar ${bgClass}">
+                    <!-- Hero Greeting -->
+                    <section class="flex flex-col items-center text-center py-3">
+                        <div class="w-36 h-36 mb-2 relative">
+                            <img alt="Cloud Illustration" class="w-full h-full object-contain relative z-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsBctmavGsfl6sp2IKtefEOq1aWHI33bnlDl-2ey_0clsqXu13jni-Waw3RC5YrKOgt5ojWILLl7cQ18l_RcRsxN51kK2vQEgy6Ek8k02u70xQ2MBPJnq4_PVfwcou4ycFYA-vjxs0ShTdPKTnPncbJ9IoH5It1YHVGlVB-eQkFKALIXo2SQR9jDfbMQc7MYSY3KR5xQ6KW8TYgR-xoFhUM6_WKogTmrIQUGdmhxExyf88NZ7xacaldVBvSbrS3gopilqE408-K1ES"/>
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 bg-white/40 blur-[30px] -z-10 rounded-full"></div>
+                        </div>
+                        <h2 class="text-2xl font-extrabold tracking-tight text-on-surface">Good Night 🌙</h2>
+                        <p class="text-on-surface-variant/70 mt-1 text-sm font-medium">Ready for a peaceful rest?</p>
+                    </section>
+
+                    <!-- Premium Banner -->
+                    <section class="relative overflow-hidden rounded-card bg-primary transition-all active:scale-[0.98] shadow-lg shadow-primary/10">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary via-[#165a6d] to-primary"></div>
+                        <div class="relative z-10 p-5 flex items-center justify-between text-left">
+                            <div class="max-w-[70%]">
+                                <span class="inline-block px-2 py-0.5 rounded bg-white/20 text-white text-[8px] font-bold uppercase tracking-widest mb-1.5">Premium</span>
+                                <h3 class="text-[15px] font-bold text-white leading-tight">Unlock Ambient Sounds</h3>
+                                <p class="text-white/80 text-[11px] mt-1 font-medium leading-relaxed">Deepen your sleep cycle with curated audio landscapes.</p>
+                            </div>
+                            <div class="w-12 h-12 bg-white/10 rounded-xl backdrop-blur-md flex items-center justify-center border border-white/20">
+                                <span class="material-symbols-outlined text-white text-xl">auto_awesome</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 1 - Sleep Timer -->
+                    <section class="bg-surface-container-lowest rounded-card p-5 border border-white/50 text-left">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-on-surface text-[15px]">Sleep Timer</h3>
+                            <span class="material-symbols-outlined text-primary text-[18px]">timer</span>
+                        </div>
+                        <div class="grid grid-cols-4 gap-2 mb-4">
+                            <button type="button" onclick="setTimerDuration('30m')" class="${timerDuration === '30m' ? activeBtn : inactiveBtn}">30 Min</button>
+                            <button type="button" onclick="setTimerDuration('1h')" class="${timerDuration === '1h' ? activeBtn : inactiveBtn}">1 Hour</button>
+                            <button type="button" onclick="setTimerDuration('2h')" class="${timerDuration === '2h' ? activeBtn : inactiveBtn}">2 Hours</button>
+                            <button type="button" onclick="setTimerDuration('custom')" class="${timerDuration === 'custom' ? activeBtn : inactiveBtn}">Custom</button>
+                        </div>
+                        <div class="flex items-center justify-between pt-3.5 border-t border-primary/5">
+                            <span class="text-[13px] font-bold text-on-surface">Fade-out music</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="fadeout-check" class="sr-only peer" ${fadeOutMusic ? 'checked' : ''} onchange="toggleFadeout()"/>
+                                <div class="w-9 h-5 bg-primary/10 rounded-full peer peer-checked:after:translate-x-[16px] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                    </section>
+
+                    <!-- Quick Actions Grid -->
+                    <section class="grid grid-cols-4 gap-2">
+                        <button onclick="navigateTo('reminders')" class="flex flex-col items-center gap-1.5 group select-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-surface-container-lowest rounded-xl border border-white/50 active:scale-90 transition-all shadow-sm">
+                                <span class="material-symbols-outlined text-primary text-xl">add_task</span>
+                            </div>
+                            <span class="text-[9px] font-bold text-on-surface-variant/60 uppercase tracking-wider">Tasks</span>
+                        </button>
+                        <button onclick="navigateTo('reminders')" class="flex flex-col items-center gap-1.5 group select-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-surface-container-lowest rounded-xl border border-white/50 active:scale-90 transition-all shadow-sm">
+                                <span class="material-symbols-outlined text-primary text-xl">alarm</span>
+                            </div>
+                            <span class="text-[9px] font-bold text-on-surface-variant/60 uppercase tracking-wider">Alarm</span>
+                        </button>
+                        <button onclick="openStoreAlert('native')" class="flex flex-col items-center gap-1.5 group select-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-surface-container-lowest rounded-xl border border-white/50 active:scale-90 transition-all shadow-sm">
+                                <span class="material-symbols-outlined text-primary text-xl">auto_awesome</span>
+                            </div>
+                            <span class="text-[9px] font-bold text-on-surface-variant/60 uppercase tracking-wider">Sounds</span>
+                        </button>
+                        <button onclick="openStoreAlert('native')" class="flex flex-col items-center gap-1.5 group select-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-surface-container-lowest rounded-xl border border-white/50 active:scale-90 transition-all shadow-sm">
+                                <span class="material-symbols-outlined text-primary text-xl">display_settings</span>
+                            </div>
+                            <span class="text-[9px] font-bold text-on-surface-variant/60 uppercase tracking-wider">Theme</span>
+                        </button>
+                    </section>
+
+                    <!-- Reminders Schedule -->
+                    <section class="bg-surface-container-lowest rounded-card p-5 border border-white/50 text-left">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-on-surface text-[15px]">Tomorrow’s Schedule</h3>
+                            <button onclick="navigateTo('add-reminder')" class="text-xs text-primary font-bold hover:underline">Add New</button>
+                        </div>
+                        <div class="space-y-2.5">
+                            ${scheduleItems}
+                        </div>
+                    </section>
+
+                    ${renderAdSlot()}
+
+                    <!-- Bottom Action Trigger -->
+                    <button onclick="navigateTo('sleep-active')" class="w-full py-4.5 bg-primary hover:bg-primary/95 text-white font-bold text-[16px] rounded-card shadow-lg shadow-primary/20 transition-all active:scale-95 border-t border-white/20 tracking-tight">
+                        Start Sleep Mode
+                    </button>
+                </div>
+                ${renderBottomNav('home')}
+            `;
+        }
+
+        function renderReminders() {
+            const bgClass = currentTheme === 'ethereal' ? 'theme-ethereal-bg' : 'theme-ad-bg';
+
+            let itemsList = '';
+            alarms.forEach(al => {
+                itemsList += `
+                    <div class="flex items-center justify-between p-4 bg-surface-container-low/50 rounded-2xl border border-primary/5 text-left group">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-md shadow-sm">${al.icon}</div>
+                            <div>
+                                <p class="font-bold text-[13px] text-on-surface leading-tight">${al.name}</p>
+                                <p class="text-[11px] font-medium text-on-surface-variant/60 mt-0.5">${al.time}</p>
+                            </div>
+                        </div>
+                        <button onclick="deleteAlarm(${al.id})" class="text-red-500/60 hover:text-red-500 p-1 rounded-full hover:bg-red-50 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                        </button>
+                    </div>
+                `;
+            });
+            if (alarms.length === 0) {
+                itemsList = `
+                    <div class="py-12 text-center text-on-surface-variant/50 flex flex-col items-center gap-3">
+                        <span class="material-symbols-outlined text-[40px] opacity-40">event_busy</span>
+                        <p class="text-sm font-semibold">Your schedule is empty</p>
+                    </div>
+                `;
+            }
+
+            return `
+                ${renderHeader('Important Days', true, 'home')}
+                <!-- Main Body Scroll -->
+                <div class="flex-1 overflow-y-auto px-6 py-4 space-y-5 no-scrollbar ${bgClass}">
+                    <div class="text-left py-2">
+                        <h2 class="text-2xl font-extrabold tracking-tight text-on-surface">Your Schedule</h2>
+                        <p class="text-xs text-on-surface-variant/70 mt-0.5">Manage and organize your bedtime routine routines</p>
+                    </div>
+                    
+                    <div class="space-y-2.5">
+                        ${itemsList}
+                    </div>
+
+                    <!-- Sync from calendar Mock -->
+                    <div class="rounded-card border-2 border-dashed border-primary/20 bg-surface-container-low/50 p-5 flex flex-col items-center justify-center text-center space-y-3">
+                        <div class="w-12 h-12 rounded-full bg-surface-container-lowest flex items-center justify-center shadow-sm">
+                            <span class="material-symbols-outlined text-[24px] text-primary/40">event_available</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-[14px] text-on-surface">Sync your events</p>
+                            <p class="text-[11px] text-on-surface-variant/70 px-2 mt-0.5">Import calendar alerts automatically.</p>
+                        </div>
+                        <button onclick="openStoreAlert('native')" class="bg-primary hover:bg-primary/95 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all active:scale-95 shadow">
+                            Import from Calendar
+                        </button>
+                    </div>
+
+                    ${renderAdSlot()}
+                </div>
+                
+                <!-- FAB -->
+                <button onclick="navigateTo('add-reminder')" class="absolute bottom-24 right-6 w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 hover:scale-105 active:scale-90 transition-all duration-200 z-40">
+                    <span class="material-symbols-outlined text-[30px] font-bold">add</span>
+                </button>
+
+                ${renderBottomNav('reminders')}
+            `;
+        }
+
+        // Category selection helper state
+        let selectedCategory = 'Sleep';
+        function setCategory(cat) {
+            selectedCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if (btn.innerText === cat) {
+                    btn.className = "category-btn px-4 py-2 rounded-full bg-primary text-white font-bold text-xs shadow-md shadow-primary/20 transition-all select-none";
+                } else {
+                    btn.className = "category-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant font-bold text-xs ring-1 ring-on-surface/5 transition-all hover:bg-secondary-container/20 select-none";
+                }
+            });
+        }
+
+        function renderAddReminder() {
+            const bgClass = currentTheme === 'ethereal' ? 'theme-ethereal-bg' : 'theme-ad-bg';
+            const activeCatBtn = "category-btn px-4 py-2 rounded-full bg-primary text-white font-bold text-xs shadow-md shadow-primary/20 transition-all select-none";
+            const inactiveCatBtn = "category-btn px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant font-bold text-xs ring-1 ring-on-surface/5 transition-all hover:bg-secondary-container/20 select-none";
+
+            return `
+                ${renderHeader('New Reminder', true, 'reminders')}
+                <form onsubmit="addReminder(event)" class="flex-1 overflow-y-auto px-6 py-5 space-y-6 no-scrollbar text-left ${bgClass}">
+                    <div class="space-y-4">
+                        <!-- Event Name -->
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-on-surface-variant px-1 uppercase tracking-wider">Event Name</label>
+                            <input id="input-event-name" required type="text" placeholder="e.g., Deep Meditation" class="w-full bg-white border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 rounded-xl font-medium text-sm transition-all outline-none"/>
+                        </div>
+                        
+                        <!-- Time -->
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-on-surface-variant px-1 uppercase tracking-wider">Time</label>
+                            <input id="input-event-time" required type="time" class="w-full bg-white border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 rounded-xl font-medium text-sm transition-all outline-none"/>
+                        </div>
+
+                        <!-- Category Selection -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-on-surface-variant px-1 uppercase tracking-wider">Category</label>
+                            <div class="flex flex-wrap gap-2 pt-1">
+                                <button type="button" onclick="setCategory('Sleep')" class="${selectedCategory === 'Sleep' ? activeCatBtn : inactiveCatBtn}">Sleep</button>
+                                <button type="button" onclick="setCategory('Mindfulness')" class="${selectedCategory === 'Mindfulness' ? activeCatBtn : inactiveCatBtn}">Mindfulness</button>
+                                <button type="button" onclick="setCategory('Hydration')" class="${selectedCategory === 'Hydration' ? activeCatBtn : inactiveCatBtn}">Hydration</button>
+                                <button type="button" onclick="setCategory('Reading')" class="${selectedCategory === 'Reading' ? activeCatBtn : inactiveCatBtn}">Reading</button>
+                            </div>
+                        </div>
+
+                        <!-- Switch Toggle -->
+                        <div class="flex items-center justify-between bg-surface-container-low p-4 rounded-2xl ring-1 ring-on-surface/5 mt-2">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-[20px]">notifications_active</span>
+                                <span class="font-bold text-[13px] text-on-surface">Enable Notifications</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer"/>
+                                <div class="w-9 h-5 bg-primary/10 rounded-full peer peer-checked:after:translate-x-[16px] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    ${renderAdSlot()}
+
+                    <!-- Save Trigger -->
+                    <button type="submit" class="w-full py-4 bg-primary hover:bg-primary/95 text-white font-bold text-[15px] rounded-xl shadow-lg transition-all active:scale-95">
+                        Save Alarm
+                    </button>
+                </form>
+            `;
+        }
+
+        function renderSleepActive() {
+            const systemTime = getSystemTimeString();
+            return `
+                <!-- Top Minimal bar -->
+                <header class="w-full flex justify-between items-center px-6 py-4 select-none shrink-0 border-b border-white/5 relative z-10">
+                    <span class="text-[13px] font-bold tracking-tight text-white/50">${systemTime}</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1 bg-white/10 rounded-full">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span>
+                        <span class="text-[9px] uppercase tracking-wider text-emerald-400 font-extrabold">Active</span>
+                    </div>
+                </header>
+
+                <!-- Screen Active Layout (Dark Mode Style Sleep Focus) -->
+                <div class="flex-1 flex flex-col justify-between items-center px-6 py-10 bg-[#06141a] text-teal-50">
+                    <!-- Cosmic Moon illustration and Pulse -->
+                    <div class="my-auto flex flex-col items-center gap-6">
+                        <div class="relative flex items-center justify-center">
+                            <!-- Outer pulsing glow rings -->
+                            <div class="absolute w-44 h-44 bg-teal-400/10 rounded-full animate-ping duration-1000"></div>
+                            <div class="absolute w-56 h-56 bg-teal-400/5 rounded-full animate-ping duration-1500"></div>
+                            
+                            <!-- Main Moon graphic -->
+                            <div class="w-32 h-32 rounded-full bg-gradient-to-tr from-teal-950 to-primary flex items-center justify-center border border-teal-500/20 shadow-2xl relative z-10">
+                                <span class="material-symbols-outlined text-[64px] text-teal-300">bedtime</span>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h3 class="text-2xl font-extrabold tracking-tight">Sleeping Mode Active</h3>
+                            <p class="text-teal-300/60 text-xs mt-1">Ethereal Rest is playing soft ambient landscapes.</p>
+                        </div>
+
+                        <!-- Clock counter -->
+                        <div class="bg-white/5 border border-white/10 rounded-2xl px-6 py-2.5">
+                            <span class="text-2xl font-bold tracking-wider font-mono text-teal-300" id="sleep-counter-clock">00:00</span>
+                        </div>
+                    </div>
+
+                    <!-- End Session triggers -->
+                    <div class="w-full flex flex-col gap-3">
+                        <button onclick="navigateTo('home')" class="w-full py-4.5 bg-white/10 hover:bg-white/20 text-white font-bold text-[15px] rounded-xl border border-white/10 transition-all active:scale-95">
+                            End Sleep Session
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // GLOBAL APP VIEW MOUNTER
+        function renderApp() {
+            let appContent = '';
+            
+            if (currentScreen === 'home') appContent = renderHome();
+            else if (currentScreen === 'reminders') appContent = renderReminders();
+            else if (currentScreen === 'add-reminder') appContent = renderAddReminder();
+            else if (currentScreen === 'sleep-active') appContent = renderSleepActive();
+
+            // Mount on desktop simulator
+            const dtViewport = document.getElementById('app-viewport');
+            if (dtViewport) dtViewport.innerHTML = appContent;
+
+            // Mount on mobile viewport
+            const mbViewport = document.getElementById('mobile-app-shell');
+            if (mbViewport) mbViewport.innerHTML = appContent;
+        }
+
+        // State Setter wrappers
+        function setTimerDuration(duration) {
+            timerDuration = duration;
+            renderApp();
+        }
+
+        function toggleFadeout() {
+            const box = document.getElementById('fadeout-check');
+            if (box) fadeOutMusic = box.checked;
+        }
+
+        // Initialize App UI
+        setInterval(() => {
+            // Update time indicator on header dynamically
+            const elements = document.querySelectorAll('#current-time');
+            const newTime = getSystemTimeString();
+            elements.forEach(el => el.innerText = newTime);
+        }, 30000);
+
+        // First Mount
+        window.addEventListener('DOMContentLoaded', () => {
+            renderApp();
+        });
+    </script>
+</body>
+</html>
