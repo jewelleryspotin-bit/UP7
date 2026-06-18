@@ -420,15 +420,29 @@
                 `;
             } else {
                 container.innerHTML = `
-                    <h4 class="font-extrabold text-teal-950 text-lg">Direct Android Install</h4>
-                    <p class="text-teal-900/60 text-xs mt-1 leading-relaxed">Since the app is not in the Google Play Store yet, download the APK file directly to install:</p>
+                    <h4 class="font-extrabold text-teal-950 text-lg">Chrome Install (Android)</h4>
+                    <p class="text-teal-900/60 text-xs mt-1 leading-relaxed">Add UP7 to your Home Screen directly from Chrome browser to install the standalone application:</p>
                     
-                    <a href="UP7-v3.5.apk" download class="w-full mt-4.5 py-3.5 bg-primary hover:bg-primary/95 text-white font-bold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
-                        <span class="material-symbols-outlined text-[18px]">download_for_offline</span>
-                        Download UP7-v3.5.apk
-                    </a>
-                    
-                    <p class="text-[10px] text-teal-900/40 mt-3 leading-snug">Note: If prompted, allow installation of applications from unknown sources in settings.</p>
+                    <div class="w-full text-left space-y-3 mt-4 bg-teal-50/50 p-4 rounded-2xl border border-primary/5">
+                        <div class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                            <p class="text-xs text-teal-950 font-medium">Open this site in <strong class="text-primary font-bold">Google Chrome</strong> browser.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                            <p class="text-xs text-teal-950 font-medium flex items-center flex-wrap gap-1">
+                                Tap the <strong class="text-primary font-bold">Menu <span class="material-symbols-outlined text-[15px] align-middle">more_vert</span></strong> button in Chrome's top-right corner.
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                            <p class="text-xs text-teal-950 font-medium">Select <strong class="text-primary font-bold">"Install app"</strong> (or "Add to Home Screen") from the menu list.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">4</span>
+                            <p class="text-xs text-teal-950 font-medium">Tap <strong class="text-primary font-bold">"Install"</strong> in the prompt to pin it to your apps list.</p>
+                        </div>
+                    </div>
                 `;
             }
             
