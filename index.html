@@ -1441,7 +1441,7 @@
 
         async function handleAuthSubmit(event) {
             event.preventDefault();
-            const email = document.getElementById('auth-email').value;
+            const email = document.getElementById('auth-email').value.trim().toLowerCase();
             const password = document.getElementById('auth-password').value;
 
             if (!supabaseClient) {
