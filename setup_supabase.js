@@ -41,6 +41,11 @@ async function run() {
             console.log("Keys saved to supabase_keys.json");
         }
 
+        // Drop existing tables to clean schemas and apply new foreign key constraints
+        console.log("Dropping existing tables to rebuild schemas...");
+        await client.query('DROP TABLE IF EXISTS public.reminders CASCADE;');
+        await client.query('DROP TABLE IF EXISTS public.users CASCADE;');
+
         // Create the users table
         console.log("Creating users table if not exists...");
         await client.query(`
