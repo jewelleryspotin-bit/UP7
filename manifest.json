@@ -1,0 +1,17 @@
+{
+  "name": "UP7 Ethereal Sleep Companion",
+  "short_name": "UP7",
+  "description": "Minimalist sleep companion app designed under the Atmospheric Clarity philosophy.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#e2fffe",
+  "theme_color": "#0c6780",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/aida/AP1WRLuhefTtpa_1PAXpXy2U8KNjADyhKLPRd2a7odIM0lrZUDtZsTl1Mh4kqHqjFHP7uQPOQeOLzsP9V9qOdCAX34O-DukIw7nEeZvuAWz0-q-X5ErERrzmEgGCJnVKanb9a9L6xTK-5sTNJ7hikb94r7Ki-cx54rKFmLqD-SGcqskcoY-wGrgdYx--k1CbtAvB9OOVUwqXYVjz2MjY4G17_G2DCp3qpWJ21yaaeoDFKS5IDYDq1QTurGTR9BLl",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
